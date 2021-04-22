@@ -1,0 +1,57 @@
+!----------------------------------------------------------------------------------
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+!
+! EXCEPTIONS: 
+! Set use_cndv           by the compset you use and the CLM_BLDNML_OPTS -dynamic_vegetation setting
+! Set use_vichydro       by the compset you use and the CLM_BLDNML_OPTS -vichydro           setting
+! Set use_cn             by the compset you use and CLM_BLDNML_OPTS -bgc  setting
+! Set use_crop           by the compset you use and CLM_BLDNML_OPTS -crop setting
+! Set spinup_state       by the CLM_BLDNML_OPTS -bgc_spinup      setting
+! Set irrigate           by the CLM_BLDNML_OPTS -irrig .true.    setting
+! Set co2_ppmv           with CCSM_CO2_PPMV                      option
+! Set dtime              with L_NCPL                             option
+! Set fatmlndfrc         with LND_DOMAIN_PATH/LND_DOMAIN_FILE    options
+! Set finidat            with RUN_REFCASE/RUN_REFDATE/RUN_REFTOD options for hybrid or branch cases
+!                        (includes $inst_string for multi-ensemble cases)
+!                        or with CLM_FORCE_COLDSTART to do a cold start
+!                        or set it with an explicit filename here.
+! Set maxpatch_glcmec    with GLC_NEC                            option
+! Set glc_do_dynglacier  with GLC_TWO_WAY_COUPLING               env variable
+!----------------------------------------------------------------------------------
+
+! SLIM input
+mml_surdat='/glade/work/kwenwen/SLIM/data_for_inputs/slim_ctrl/slim2deg_fromCMIP6-AMIP-1deg_ensemble001-010_1991to2010clim_max-ctrl-bucket_rs150.nc'
+
+! Suppress all monthly output
+hist_empty_htapes = .true.
+
+! --- h0 = monthly averages 
+hist_fincl1 = 'MML_fsds', 'MML_fsdsnd', 'MML_fsdsni', 'MML_fsdsvd', 'MML_fsdsvi', 'MML_fsr', 'MML_fsrnd', 'MML_fsrni', 'MML_fsrvd', 'MML_fsrvi', 
+              'MML_lwdn', 'MML_lwup', 'MML_fsns', 'MML_flns', 'MML_shflx', 'MML_lhflx', 'MML_gsoi', 'MML_gsnow', 'MML_qa', 'MML_swabs', 
+              'MML_zref', 'MML_tbot', 'MML_thref', 'MML_qbot', 'MML_uref', 'MML_eref', 'MML_pbot', 'MML_rhomol', 'MML_rhoair', 'MML_cpair', 
+              'MML_l2a_tref2m', 'MML_l2a_qref2m', 'MML_l2a_uref10m', 'MML_soilz', 'MML_soil_t',  'MML_soil_liq', 'MML_soil_ice', 'MML_dz', 'MML_zh', 
+              'MML_tk', 'MML_tkh', 'MML_dtsoi', 'MML_cv', 'MML_water', 'MML_snow', 'MML_runoff', 'MML_maxice', 'MML_q_excess', 'MML_lh_excess', 
+              'MML_q_demand', 'MML_lh_demand', 'MML_psrf', 'MML_ts', 'MML_qs', 'MML_alb', 'MML_prec_liq', 'MML_prec_frz', 'MML_evap', 'MML_snowmelt', 
+              'RAIN','RAIN_FROM_ATM','SNOW','SNOW_FROM_ATM','MML_l2a_taux','MML_l2a_tauy', 'MML_ustar', 'MML_tstar', 'MML_qstar', 'MML_tvstar', 'MML_obu', 'MML_beta',  
+	      'MML_ram', 'MML_rah', 'MML_z0m', 'MML_z0h', 'mml_err_h2o', 'mml_err_h2osno', 'mml_err_seb', 'mml_err_soi', 'mml_err_sol', 'WIND', 'THBOT', 
+	      'RH', 'ZBOT', 'TBOT', 'QBOT', 'PBOT', 'PSurf', 'ATM_TOPO', 'MML_snowmaskdepth', 'MML_evap_rs', 'MML_bucket_cap', 'MML_soiltype', 'MML_roughness', 
+	      
+! --- h1 = daily averages 
+hist_fincl2 = 'MML_fsds', 'MML_fsr', 'MML_fsns', 'MML_flns', 'MML_shflx', 'MML_lhflx', 'MML_gsoi', 'MML_gsnow', 'MML_tbot', 'MML_thref', 'MML_qbot', 
+              'MML_uref', 'MML_eref', 'MML_pbot', 'MML_l2a_tref2m', 'MML_l2a_qref2m', 'MML_l2a_uref10m', 'MML_soil_t',  'MML_soil_liq', 'MML_soil_ice', 
+              'MML_dtsoi', 'MML_water', 'MML_snow', 'MML_runoff', 'MML_psrf', 'MML_ts', 'MML_qs', 'MML_prec_liq', 'MML_prec_frz', 'MML_evap', 
+              'MML_snowmelt', 'RAIN','RAIN_FROM_ATM','SNOW','SNOW_FROM_ATM','MML_l2a_taux','MML_l2a_tauy', 'MML_ustar', 'MML_tstar', 'MML_qstar', 
+	      'MML_tvstar', 'MML_beta'
+
+! -- h2 = 3-hourly averages 
+hist_fincl3 = 'MML_ts', 'MML_fsns', 'MML_flns', 'MML_shflx', 'MML_lhflx', 'MML_gsoi', 'MML_gsnow', 'MML_soil_t', 'MML_water'
+
+! Output frequency 
+hist_nhtfrq = 0, -24, -3
+hist_mfilt = 12, 365, 8
+hist_avgflag_pertape = 'A', 'A', 'A' 
+
+! Not sure whether the below is necessary 
+use_init_interp = .true.
+init_interp_fill_missing_with_natveg = .true.
