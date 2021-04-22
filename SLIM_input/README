@@ -1,0 +1,140 @@
+2021-04-01
+Input file for "slim_cam6_2deg_F2000_max-ctrl-bucket_rs150"
+
+********************************
+*     NCL overall workflow     *
+********************************
+
+* We generate the SLIM input from CMIP6-AMIP 1-deg runs averaged in 1991-2010.
+* To make sure the CLM properties are robust, we create the SLIM input based on each of available ensemble members (10 available)
+  then do an ensemble mean of the created SLIM input files
+* The 1.*.ncl is used to produce SLIM input corresponding to each ensemble members
+* The 2.*.ncl is used to produce the ensemble-averaged SLIM input
+* The 3.*.ncl is used to regrid the 1-deg SLIM input to 2-deg files
+	1. make_CMIP6-AMIP_ensemble001-010_slim_input_max-ctrl-bucket_rs150_20210401.ncl
+	2. make_ensemblemean_max-ctrl-bucket_rs150_20210401.ncl
+	3. regrid_to_2deg_max-ctrl-bucket_rs150_20210401.ncl
+
+************************************************
+*         Before we start the workflow         *
+************************************************
+We used several additional *.ncl scripts to calculate the following variables. 
+Here, we briefly go through how each is derived. 
+
+*****************
+* [bucketdepth] *
+*****************
+
+* Derived data: f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.bucketdepth.MillyShmakin2002.19912010.clim.Isla.nc for each ensemble member
+
+* Calculation of bucketdepth is in this folder:
+/glade/u/home/kwenwen/work/Postdoc_work/SLIM_input/SLIMinput_workflow/1deg/ensemble001-010/bucketdepth/
+
+* Step by step
+(a) make_surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_PCT_NAT_PFT_to_MillyShmakin2002a.ncl 
+- to group the PCT_NAT_PFT to the seven vegetation types in Milly and Shmakin (2002)
+- data produced
+	- "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_to_MillyShmakin2002a.nc"
+- data used
+	- "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_PCT_NAT_PFT.nc"
+
+(b) make_surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_ZR_MillyShmakin2002a.ncl
+- to derive the effective root-zone depth (Z_R) based on Milly and Shmakin (2002)
+- data produced
+	- "surfdata_1.9x2.5_hist_78pfts_CMIP6_simyr1850_c190304_ZR_MillyShmakin2002a.nc"
+	- "surfdata_1.9x2.5_hist_78pfts_CMIP6_simyr1850_c190304_soil_layer_MillyShmakin2002a.nc" 
+- data used 
+	- "surfdata_1.9x2.5_hist_78pfts_CMIP6_simyr1850_c190304_to_MillyShmakin2002a.nc" [Derived PCT_NAT_PFT based on Milly and Shmakin 2002]
+
+(c) plot_bucketdepth_from_MillyShmakin2002_following_Isla_1deg_ensemble001-010_19912010.ncl
+- to integrate teh SOILLIQ over Z_R
+- data produced
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.bucketdepth.MillyShmakin2002.19912010.clim.Isla.nc" [001 to 010] 
+- data used
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.SOILLIQ.1991-2010.monclim.nc" for each ensemble member [001 to 010]
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.DZSOI.nc" soil layer thickness [directly from CLM output]
+	- "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_ZR_MillyShmakin2002a.nc" [Z_R derived from Milly and Shmakin 2002a]
+	- "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_layer_MillyShmakin2002a.nc" [Corresponding soil layer derived from Z_R, based on Table2.3 of CLM5 tech note]
+
+****************
+* [plant type] *
+****************
+- See (a) in bucketdepth derivation
+- surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_to_MillyShmakin2002a.nc
+
+*****************************
+* [soil thermal properties] *
+*****************************
+- surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_tk_f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.nc [001 to 010]
+- surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_cv_f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.nc [001 to 010]
+- folder for the calculation: /glade/u/home/kwenwen/work/Postdoc_work/SLIM_input/SLIMinput_workflow/1deg/ensemble001-010/input4_soil_thermal/
+- data used
+	- surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_solid_soil_tk_cv.nc
+	- surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_sand_clay_fom.nc 
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.SOILICE.1991-2010.monclim.nc"
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.SOILLIQ.1991-2010.monclim.nc"
+	- "f.e21.FHIST_BGC.f09_f09_mg17.CMIP6-AMIP.*.clm2.h0.TSOI.1991-2010.monclim.nc"
+- scripts used
+	- make_surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_solid_soil_tk_cv.ncl
+	- make_surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_tk.ncl
+	- make_surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_cv.ncl
+
+********************************
+*    How to derive each var    *
+******************************** 
+(1) glc_mask
+The 'glc_mask' in SLIM is a binary variable, with zero meaning no glacial mask, with one meaning with glacial mask.
+
+We obtain the information of glacier percentage at each grid box from the land surface dataset used for the CMIP6-AMIP runs
+(surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_PCT_GLACIER.nc, which is archived on Cheyenne: XXX or website: XXX). 
+
+We then follow Lague et al. (2019) to set regions with glacier percentage >= 50% to 1. 
+
+(2) albedo 
+There are 4 albedo streams used in the SLIM forcing file:
+	* Near-infrared direct albedo
+	* Near-infrared diffuse albedo
+	* Visible direct albedo
+	* Visible diffuse albedo
+
+The albedo streams were calculated based on the CMIP6-AMIP output. 
+
+For ground albedo, we directly use the calculated albedo. 
+For snow albedo, we use the values averaged over the Greenland (66N-76N, 315E-325E). 
+
+(3) bucketdepth 
+
+(4) emissivity = 1 everywhere 
+
+(5) snowmask
+Calculated based on "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_to_MillyShmakin2002a.nc".
+Higher vegetation has deeper snowmasking depth 100
+Lower vegetation has lower snowmasking depth 40
+
+(6) roughness
+Roughness is based on the vegetation height, a variable from the CMIP6-AMIP output.
+
+(7) evaporative resistance
+Here we set rs = 150 s/m everywhere. 
+
+[In the commented lines, we will provide codes for calculating rs from stomatal conductance]
+
+(8) dust fluxes
+These are variables needed for the model coupler, but not essential for the simulation and do not impact our conclusions. 
+So we directly use the DSTFLXT variable from the CMIP6-AMIP as the dust fluxes. 
+
+(9) soil type = 0 everywhere
+
+(10) soil_tk_1d and soil_cv_1d
+From the calculated "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_tk.nc" and "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_cv.nc"  
+
+(11) glc_tk_1d and glc_cv_1d
+We used values from table 2.7 of CLM5 tech note for glacier thermal properties as an estimation 
+
+********************************
+*        Visualization         *
+********************************
+NOTE:
+- We will also provide a jupyter notebook for the input visualization 
+- This .ipynb will be archived on our Github repo and will be provided for readers
+
