@@ -135,6 +135,5 @@ We used values from table 2.7 of CLM5 tech note for glacier thermal properties a
 *        Visualization         *
 ********************************
 NOTE:
-- We will also provide a jupyter notebook for the input visualization 
-- This .ipynb will be archived on our Github repo and will be provided for readers
+- Figures of key forcing variables can be found in /SLIM_experiments/SLIM_work/Tvar_SLIM_rs_AppendixA.ipynb 
 
