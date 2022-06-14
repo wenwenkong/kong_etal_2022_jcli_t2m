@@ -131,9 +131,3 @@ From the calculated "surfdata_0.9x1.25_78pfts_CMIP6_simyr1850_c170824_soil_tk.nc
 (11) glc_tk_1d and glc_cv_1d
 We used values from table 2.7 of CLM5 tech note for glacier thermal properties as an estimation 
 
-********************************
-*        Visualization         *
-********************************
-NOTE:
-- Figures of key forcing variables can be found in /SLIM_experiments/SLIM_work/Tvar_SLIM_rs_AppendixA.ipynb 
-
