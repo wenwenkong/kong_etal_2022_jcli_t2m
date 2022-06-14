@@ -4,7 +4,7 @@ See [here](https://github.com/marysa/SimpleLand) for more details.
 
 ## About this repo
 
-This repo includes scripts for setting up the SLIM experiments in Kong et al, 2022 (under review)  
+This repo includes example scripts for setting up the SLIM experiments in Kong et al, 2022 (under review)  
 
 SLIM_input
 * NCL workflow for creating SLIM forcing files 
